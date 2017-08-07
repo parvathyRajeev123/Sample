@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+ <script> 
+$(document).ready(function(){   
+      $("button").click(function(){  
+            $.get("/list", function(data, status){ 
+                //var data = [{Emp_id:1, UserName: 2,todoList:3}] 
+                console.log(">>>>>>>>>>", data)       
+                mytable = $('<table></table>').attr({ id: "basicTable" });
+                var row = $('<tr></tr>').attr({}).appendTo(mytable);
+                $('<td></td>').text("Emp_id").appendTo(row); 
+                $('<td></td>').text("UserName").appendTo(row); 
+                $('<td></td>').text("todoList").appendTo(row);
+                for (var i = 0; i < data.length; i++) {
+                    var row = $('<tr></tr>').attr({}).appendTo(mytable);
+                    $('<td></td>').text(data[i].Emp_id).appendTo(row);
+                    var td = $('<td></td>').attr({}).appendTo(row);
+                   // var url = "/employeepage" + data[i].Emp_id;
+                   var url ="/user/"+data[i].Emp_id;
+                    var aHref = $('<a href=""></a>').attr("href", url);
+                    $(aHref).text(data[i].UserName).appendTo(td);
+
+                    //$('<a href=""></a>').attr("href", url).appendTo(td);
+                    //console.log(aHref);
+                    //$('<td></td>').text(aHref[0]).appendTo(row); 
+                    $('<td></td>').text(data[i].todoList).appendTo(row);        
+                }
+                $('#box').empty();
+                mytable.appendTo("#box");   
+            });                         
+        }); 
+        
+    });
+  </script>
+<style type="text/css">
+     .right {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            text-orientation: "right";
+        }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+   <h1>Employee Details</h1>
+</header>
+  
+<nav>
+    
+    
+  <body>
+
+<form action="/save">
+Emp_id:<br>
+<input type="text" name="Emp_id" id="empn">
+<br>
+UserName:<br>
+<input type="text" name="UserName" id="user";>
+<br>
+todoList:<br>
+<input type="text" name="todoList" id="todo";>
+<br><br>
+<input type="submit" value="submit">
+
+</form>
+<button> List </button>
+   
+    <div id="box" class="right"></div>
+
+<!--<script>
+function save()
+{
+   var uname=document.getElementById("uname").value;
+ //creating json array which is to be sent to the server
+
+  var packet={uname:uname};
+   packet=JSON.stringify(packet);
+
+// Now send it to the server
+    $.ajax({
+    type:"POST",
+    data:{packet:packet},
+    url:"/login",
+    //success:function(data){}
+    });
+</script>-->
+
+</body>
+</nav>
+
+</div>
+</body>
+</html>
