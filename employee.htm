@@ -2,46 +2,54 @@
 <html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
- <script> 
-$(document).ready(function(){   
-      $("button").click(function(){  
-            $.get("/list", function(data, status){ 
-                //var data = [{Emp_id:1, UserName: 2,todoList:3}] 
-                console.log(">>>>>>>>>>", data)       
-                mytable = $('<table></table>').attr({ id: "basicTable" });
-                var row = $('<tr></tr>').attr({}).appendTo(mytable);
-                $('<td></td>').text("Emp_id").appendTo(row); 
-                $('<td></td>').text("UserName").appendTo(row); 
-                $('<td></td>').text("todoList").appendTo(row);
-                for (var i = 0; i < data.length; i++) {
-                    var row = $('<tr></tr>').attr({}).appendTo(mytable);
-                    $('<td></td>').text(data[i].Emp_id).appendTo(row);
-                    var td = $('<td></td>').attr({}).appendTo(row);
-                   // var url = "/employeepage" + data[i].Emp_id;
-                   var url = "/tagId" + data[i].Emp_id;
-                    var aHref = $('<a href=""></a>').attr("href", url);
-                    $(aHref).text(data[i].UserName).appendTo(td);
+    <script> 
+      $(document).ready(function(){
+        $.get("/second", function(data, status){
+          //console.log("data===> ", data);
+          var data = data[0];
+          console.log("data===> ", data);
+          $('#Pre_Emp_id').val(data.Emp_id);
+        //   $('#Emp_id').val(data.Emp_id);
+        //   $('#empName').val(data.UserName);
+          $('#empTodo').val(data.todoList);
+          $('#Emp_id').text(data.Emp_id);
+        });
 
-                    //$('<a href=""></a>').attr("href", url).appendTo(td);
-                    //console.log(aHref);
-                    //$('<td></td>').text(aHref[0]).appendTo(row); 
-                    $('<td></td>').text(data[i].todoList).appendTo(row);        
-                }
-                $('#box').empty();
-                mytable.appendTo("#box");   
-            });                         
+        $('#add').click(function(){ 
+            var dat ={};
+            dat.empID = $('#Pre_Emp_id').val();
+            dat.todo = $('#empTodo').val();
+            $.get('/add', dat, function(d){
+                alert("added");
+            });
+        });
+
+        $('#update').click(function(){      
+          var data = {};
+          data.previousId = $('#Pre_Emp_id').val();
+        //   data.empId = $('#Emp_id').val();
+        //   data.empName = $('#empName').val();
+          data.empTodo = $('#empTodo').val();
+          console.log('up: ', data);
+          $.get('/update', data, function(data){
+              alert('Update Success');
+              window.location.href = '/htmlpage';
+          });
         }); 
-        
-    });
-  </script>
-<style type="text/css">
-     .right {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            text-orientation: "right";
-        }
-</style>
+
+        $('#delete').click(function(){
+          console.log('del');
+          var deleteUrl = "/delete/" + $('#Emp_id').val();
+          $.get(deleteUrl, function(data){
+              alert('Delete Success');
+              window.location.href = '/htmlpage';
+          });
+        });
+
+
+      });
+
+    </script>
 </head>
 <body>
 
@@ -53,45 +61,15 @@ $(document).ready(function(){
   
 <nav>
     
-    
   <body>
-
-<form action="/save">
-Emp_id:<br>
-<input type="text" name="Emp_id" id="empn">
-<br>
-UserName:<br>
-<input type="text" name="UserName" id="user";>
-<br>
-todoList:<br>
-<input type="text" name="todoList" id="todo";>
-<br><br>
-<input type="submit" value="submit">
-
-</form>
-<button> List </button>
-   
-    <div id="box" class="right"></div>
-
-<!--<script>
-function save()
-{
-   var uname=document.getElementById("uname").value;
- //creating json array which is to be sent to the server
-
-  var packet={uname:uname};
-   packet=JSON.stringify(packet);
-
-// Now send it to the server
-    $.ajax({
-    type:"POST",
-    data:{packet:packet},
-    url:"/login",
-    //success:function(data){}
-    });
-</script>-->
-
-</body>
+      <div id="Emp_id"></div>
+      <input type="hidden" name="Pre_Emp_id" id="Pre_Emp_id"></input> <br/>
+      <!-- Employee ID: <input type="text" name="Emp_id" id="Emp_id"></input> <br/>
+      User Name: <input type="text" name="empName" id="empName"></input><br/> -->
+      Todo List: <input type="text" name="empTodo" id="empTodo"></input><br/>
+      <button id="add" value="Update">Add</button>
+      <!-- <button id="delete" value="Delete">Delete</button> -->
+  </body>
 </nav>
 
 </div>

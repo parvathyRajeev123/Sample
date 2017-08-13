@@ -1,99 +1,67 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
- <script> 
-$(document).ready(function(){   
-      $("button").click(function(){  
-            $.get("/list", function(data, status){ 
-                //var data = [{Emp_id:1, UserName: 2,todoList:3}] 
-                console.log(">>>>>>>>>>", data)       
-                mytable = $('<table></table>').attr({ id: "basicTable" });
-                var row = $('<tr></tr>').attr({}).appendTo(mytable);
-                $('<td></td>').text("Emp_id").appendTo(row); 
-                $('<td></td>').text("UserName").appendTo(row); 
-                $('<td></td>').text("todoList").appendTo(row);
-                for (var i = 0; i < data.length; i++) {
-                    var row = $('<tr></tr>').attr({}).appendTo(mytable);
-                    $('<td></td>').text(data[i].Emp_id).appendTo(row);
-                    var td = $('<td></td>').attr({}).appendTo(row);
-                   // var url = "/employeepage" + data[i].Emp_id;
-                   var url ="/user/"+data[i].Emp_id;
-                    var aHref = $('<a href=""></a>').attr("href", url);
-                    $(aHref).text(data[i].UserName).appendTo(td);
-
-                    //$('<a href=""></a>').attr("href", url).appendTo(td);
-                    //console.log(aHref);
-                    //$('<td></td>').text(aHref[0]).appendTo(row); 
-                    $('<td></td>').text(data[i].todoList).appendTo(row);        
-                }
-                $('#box').empty();
-                mytable.appendTo("#box");   
-            });                         
-        }); 
-        
-    });
-  </script>
 <style type="text/css">
-     .right {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            text-orientation: "right";
-        }
+  th {
+      border: 1px solid;
+      width: 20%;
+  }
+  td {
+      border: 1px solid;
+      width: 20%;
+  }
+  #box {
+    width: 100%;
+  }
 </style>
-</head>
-<body>
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#button").click(function(){
+      $.get("/list", function(data, status){
+        var table = $("#basicTb");
+        for(var i=0;i<data.length;i++) {
+          //console.log(data[i]);
+          var row = $('<tr></tr>').attr({}).appendTo(table);
+          $('<td></td>').text(data[i].Emp_id).appendTo(row);
+          var td = $('<td></td>').attr({}).appendTo(row);
+          var url = "/listDetails/" + data[i].Emp_id;
+          var aHref = $('<a href=""></a>').attr("href", url);
+          $(aHref).text(data[i].UserName).appendTo(td);
+          // $('<td></td>').text(data[i].todoList).appendTo(row);
 
-<div class="container">
+          var tdAction = $('<td></td>').attr({}).appendTo(row);
+          // var editUrl = "/edit/" + data[i].Emp_id;
+          // var aHrefEdit = $('<a href=""></a>').attr("href", editUrl);
 
-<header>
-   <h1>Employee Details</h1>
-</header>
-  
-<nav>
-    
-    
-  <body>
+          var deleteUrl = "/delete/" + data[i].Emp_id;
+          var aHrefDelete = $('<a href=""></a>').attr("href", deleteUrl);
 
-<form action="/save">
-Emp_id:<br>
-<input type="text" name="Emp_id" id="empn">
-<br>
-UserName:<br>
-<input type="text" name="UserName" id="user";>
-<br>
-todoList:<br>
-<input type="text" name="todoList" id="todo";>
-<br><br>
-<input type="submit" value="submit">
-
-</form>
-<button> List </button>
-   
-    <div id="box" class="right"></div>
-
-<!--<script>
-function save()
-{
-   var uname=document.getElementById("uname").value;
- //creating json array which is to be sent to the server
-
-  var packet={uname:uname};
-   packet=JSON.stringify(packet);
-
-// Now send it to the server
-    $.ajax({
-    type:"POST",
-    data:{packet:packet},
-    url:"/login",
-    //success:function(data){}
+          // $(aHrefEdit).text("EDIT").appendTo(tdAction);
+          // $("</br>").appendTo(tdAction);
+          $(aHrefDelete).text("DELETE").appendTo(tdAction);
+          $("#button").hide();
+        }
+      });
     });
-</script>-->
+  });
+</script>
 
-</body>
-</nav>
+<div id="box">
+<form action="/save" id="formSize">
+  Employee ID: <input type="text" name="Emp_id" id="Emp_id"></input> <br/>
+  User Name: <input type="text" name="empName" id="empName"></input><br/>
+  <!-- Todo List: <input type="text" name="empTodo" id="empTodo"></input> -->
+  <input type="submit" value="Submit"></input>
+</form>
 
+<button id="button">List</button>
+
+<table id="basicTb">
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>List</th>
+    <!-- <th>Action</th> -->
+  </tr>
+</table>
 </div>
-</body>
 </html>
